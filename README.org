@@ -1,0 +1,24 @@
+* ziggy-mode.el
+
+a simple tree-sitter major mode for the Ziggy serialization language and Emacs>=29.
+
+to use with =straight.el= and =straight-use-package=, add the following to your configuration:
+
+#+begin_src emacs-lisp
+  (use-package ziggy-mode
+    :straight (ziggy-mode
+               :type git
+               :host github
+               :repo "robbielyman/ziggy-mode"
+               :branch main))
+#+end_src
+
+to use the =ziggy= LSP with =eglot=, add the following to your configuration:
+
+#+begin_src emacs-lisp
+  (add-to-list 'eglot-server-programs
+               '(((ziggy-mode :language-id "ziggy")
+                  (ziggy-schema-mode :language-id "ziggy-schema")) "ziggy" "lsp"))
+#+end_src
+
+NB: this assumes that =ziggy= is on your PATH.
