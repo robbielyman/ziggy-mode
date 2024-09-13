@@ -1,6 +1,6 @@
 * ziggy-mode.el
 
-a simple tree-sitter major mode for the Ziggy serialization language and Emacs>=29.
+a simple tree-sitter major mode for the [[https://ziggy-lang.io][Ziggy]] serialization language and Emacs>=29.
 
 to use with =straight.el= and =straight-use-package=, add the following to your configuration:
 
