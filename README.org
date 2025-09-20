@@ -2,6 +2,8 @@
 
 a simple tree-sitter major mode for the [[https://ziggy-lang.io][Ziggy]] serialization language and Emacs>=29.
 
+** installation
+
 to use with =straight.el= and =straight-use-package=, add the following to your configuration:
 
 #+begin_src emacs-lisp
@@ -10,8 +12,28 @@ to use with =straight.el= and =straight-use-package=, add the following to your 
                :type git
                :host github
                :repo "robbielyman/ziggy-mode"
-               :branch main))
+               :branch "main"))
 #+end_src
+
+you still need to install the tree-sitter grammars for ziggy and ziggy-schema, for example in the following way:
+
+#+begin_src emacs-lisp
+  (unless (treesit-language-available-p 'ziggy)
+    (require 'treesit)
+    (add-to-list 'treesit-language-source-alist
+  			   '(ziggy "https://github.com/kristoff-it/ziggy" "main" "tree-sitter-ziggy/src" nil nil))
+    (treesit-install-language-grammar 'ziggy))
+
+  (unless (treesit-language-available-p 'ziggy-schema)
+    (require 'treesit)
+    (add-to-list 'treesit-language-source-alist
+  			   '(ziggy-schema "https://github.com/kristoff-it/ziggy" "main" "tree-sitter-ziggy-schema/src" nil nil))
+    (treesit-install-language-grammar 'ziggy-schema))
+#+end_src
+
+moreover, ziggy-mode assumes that =ziggy= is on your PATH or the variable =ziggy-bin= is properly customized.
+
+** LSP
 
 to use the =ziggy= LSP with =eglot=, add the following to your configuration:
 
@@ -21,4 +43,15 @@ to use the =ziggy= LSP with =eglot=, add the following to your configuration:
                   (ziggy-schema-mode :language-id "ziggy-schema")) "ziggy" "lsp"))
 #+end_src
 
-NB: this assumes that =ziggy= is on your PATH.
+to use =ziggy= LSP with =lsp-mode=, add the following to your configuration:
+
+#+begin_src emacs-lisp
+  (add-hook 'ziggy-mode-hook 'lsp)
+
+  (with-eval-after-load 'lsp-mode
+    (add-to-list 'lsp-language-id-configuration '(ziggy-mode . "ziggy"))
+    (lsp-register-client (make-lsp-client
+  						:new-connection (lsp-stdio-connection "ziggy")
+  						:activation-fn (lsp-activate-on "ziggy")
+  						:server-id 'ziggy)))
+#+end_src
